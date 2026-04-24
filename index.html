@@ -188,7 +188,20 @@
       width: 100%;
       display: block;
     }
-
+.project-collapse {
+  display: inline-block;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font: inherit;
+  font-size: 39px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  transition: color 0.15s;
+  text-align: left;
+}
+.project-collapse:hover { color: black; }
     .name-toggle:hover ~ .site-subtitle,
     .name-toggle.is-open ~ .site-subtitle { color: var(--hover); }
   </style>
@@ -224,6 +237,7 @@
               <img src="images/luovo/luovo_labels.jpg" alt="Label Designs" class="project-img">
               <img src="images/luovo/luovo_web_layout.jpg" alt="Luovo Home Page" class="project-img">
             </div>
+            <button class="project-collapse">Collapse</button>
           </div>
         </div>
       </div>
@@ -242,6 +256,7 @@
               <img src="images/8bit/item_page.png" alt="8-Bit Archive item page" class="project-img">
               <img src="images/8bit/find_store.png" alt="8-Bit Archive find store" class="project-img">
             </div>
+            <button class="project-collapse">Collapse</button>
           </div>
         </div>
       </div>
@@ -255,9 +270,9 @@
           <div class="project-dropdown-inner">
             <div class="project-desc">A book in the shape of a fashion doll toy box. It details the origin story of the character Lilli and her transformation into the Mattel's child friendly version who is now known as Barbie.</div>
             <div class="project-images">
-              <img src="images/lilli/food_icon.png" alt="Sara Duell Design Lecture Animation" class="project-img">
               <img src="images/lilli/book_layout.jpg" alt="Sara Duell Design Lecture Animation" class="project-img">
             </div>
+            <button class="project-collapse">Collapse</button>
           </div>
         </div>
       </div>
@@ -278,6 +293,7 @@
               <img src="images/cubed-creatures/s_web5.jpg" alt="Cubed Creatures" class="project-img">
               <img src="images/cubed-creatures/s_web6.jpg" alt="Cubed Creatures" class="project-img">
             </div>
+            <button class="project-collapse">Collapse</button>
           </div>
         </div>
       </div>
@@ -295,6 +311,7 @@
               <img src="images/blood-sugar/box.png" alt="Playing Cards and Box" class="project-img">
               <img src="images/blood-sugar/mat.jpg" alt="Playing Cards and Box" class="project-img">
             </div>
+            <button class="project-collapse">Collapse</button>
           </div>
         </div>
       </div>
@@ -315,6 +332,7 @@
               <img src="images/pancreas/pmm_web5.jpg" alt="Pancreas: Manual Mode" class="project-img">
               <img src="images/pancreas/pmm_web6.jpg" alt="Pancreas: Manual Mode" class="project-img">
             </div>
+            <button class="project-collapse">Collapse</button>
           </div>
         </div>
       </div>
@@ -366,6 +384,24 @@
           dropdown.addEventListener('transitionend', onCollapse);
         }
       });
+      document.querySelectorAll('.project-collapse').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var item     = btn.closest('.project-item');
+    var dropdown = btn.closest('.project-dropdown');
+    var toggle   = item.querySelector('.project-toggle');
+
+    dropdown.classList.remove('is-open');
+    toggle.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+
+    function onCollapse(e) {
+      if (e.propertyName !== 'grid-template-rows') return;
+      dropdown.removeEventListener('transitionend', onCollapse);
+      item.classList.remove('is-open');
+    }
+    dropdown.addEventListener('transitionend', onCollapse);
+  });
+});
     });
   </script>
 </body>
