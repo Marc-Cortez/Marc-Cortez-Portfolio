@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marc Cortez — Design Portfolio</title>
+  <style>
+    @font-face {
+      font-family: 'Garamond3LTStd';
+      src: url('fonts/Garamond3LTStd.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #bfbfbf;
+      --ink:         #000000;
+      --hover:       #ffffff;
+      --indent-step: 130px;
+      --font: 'Helvetica', 'Garamond3LTStd', 'Garamond', 'EB Garamond', Georgia, serif;
+    }
+
+    html, body {
+      width: 100%; min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 39px;
+      font-weight: normal;
+      line-height: 1.1;
+      overflow-x: hidden;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 48px 56px 80px;
+    }
+
+    /* ── Site header ──────────────────────────────────── */
+    .site-header {
+      font-size: 39px;
+      font-weight: normal;
+      line-height: 1.1;
+      padding-bottom: 20px;
+    }
+
+    .name-toggle {
+      background: none;
+      border: none;
+      font: inherit;
+      font-size: 39px;
+      color: var(--ink);
+      padding: 0;
+      cursor: pointer;
+      transition: color 0.15s;
+      display: block;
+    }
+    .name-toggle:hover,
+    .name-toggle.is-open { color: var(--hover); }
+
+    .name-dropdown {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.45s ease;
+    }
+    .name-dropdown.is-open { grid-template-rows: 1fr; }
+
+    .name-dropdown-inner {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .name-dropdown-inner a {
+      font-family: 'Helvetica', sans-serif;
+      font-style: italic;
+      font-size: 39px;
+      color: white;
+      text-decoration: none;
+      padding-top: 8px;
+      transition: color 0.15s;
+    }
+    .name-dropdown-inner a:hover { color: black; }
+
+    .site-subtitle {
+      display: block;
+      transition: color 0.15s;
+    }
+    .name-toggle.is-open ~ .site-subtitle { color: var(--hover); }
+
+    /* ── Project list ─────────────────────────────────── */
+    .project-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-item {
+      padding-left: calc(var(--indent-step) * var(--level));
+      padding-top: 10px;
+      padding-bottom: 20px;
+      transition: padding-left 0.35s ease;
+      position: relative;
+      isolation: isolate;
+    }
+    .project-item:nth-child(1) { --level: 1; --project-color: rgb(180, 140, 120); }
+    .project-item:nth-child(2) { --level: 2; --project-color: rgb(120, 150, 175); }
+    .project-item:nth-child(3) { --level: 3; --project-color: rgb(205, 138, 194); }
+    .project-item:nth-child(4) { --level: 4; --project-color: rgb(155, 175, 130);}
+    .project-item:nth-child(5) { --level: 5; --project-color: rgb(195, 170, 110); }
+    .project-item:nth-child(6) { --level: 6; --project-color: rgb(86, 97, 167); }
+    .project-item.is-open { padding-left: 0; }
+
+    /* Full-bleed background envelope */
+    .project-item::before {
+      content: '';
+      position: absolute;
+      top:    -14px;
+      bottom: -14px;
+      left:   -9999px;
+      right:  -9999px;
+      background-color: transparent;
+      transition: background-color 0.35s ease;
+      z-index: -1;
+    }
+    .project-item.is-open::before {
+      background-color: var(--project-color);
+    }
+
+    .project-toggle {
+      display: inline-block;
+      cursor: pointer;
+      color: var(--ink);
+      transition: color 0.15s;
+      background: none;
+      border: none;
+      font: inherit;
+      text-align: left;
+      padding: 0;
+      letter-spacing: inherit;
+    }
+    .project-toggle:hover,
+    .project-toggle.is-open { color: var(--hover); }
+
+    .project-title,
+    .project-category {
+      font-size: 40px;
+      font-weight: normal;
+      line-height: 1.1;
+      letter-spacing: 0.01em;
+    }
+
+    .project-dropdown {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.45s ease;
+    }
+    .project-dropdown.is-open { grid-template-rows: 1fr; }
+
+    .project-dropdown-inner { overflow: hidden; }
+
+    .project-desc {
+      max-width: 700px;
+      padding-top: 14px;
+      padding-bottom: 40px;
+      font-size: 39px;
+      font-weight: normal;
+      line-height: 1.1;
+    }
+
+    .project-desc a {
+      font-family: 'Helvetica', sans-serif;
+      font-style: italic;
+      color: white;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .project-desc a:hover { color: black; }
+
+    .project-images {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .project-img {
+      width: 100%;
+      display: block;
+    }
+
+    .name-toggle:hover ~ .site-subtitle,
+    .name-toggle.is-open ~ .site-subtitle { color: var(--hover); }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header class="site-header">
+      <button class="name-toggle" aria-expanded="false">Marc Cortez</button>
+       <span class="site-subtitle">Design Portfolio</span>
+       <div class="name-dropdown">
+        <div class="name-dropdown-inner">
+          <a href="portfolio.pdf" download>Physical Portfolio</a>
+          <a href="resume.pdf" download>Resume</a>
+        </div>
+      </div>
+     
+    </header>
+
+    <nav class="project-list" aria-label="Projects">
+
+      <div class="project-item">
+        <button class="project-toggle" aria-expanded="false">
+          <div class="project-title">Luovo Branding</div>
+          <div class="project-category">Branding and Web Design</div>
+        </button>
+        <div class="project-dropdown" role="region">
+          <div class="project-dropdown-inner">
+            <div class="project-desc">A personal branding project for a fictional confections company which includes packaging, logo design, advertisements and website design.</div>
+            <div class="project-images">
+              <img src="images/luovo/main_large_luovo_web.jpg" alt="Luovo Branding" class="project-img">
+              <img src="images/luovo/luovo_package.jpg" alt="Luovo Packaging" class="project-img">
+              <img src="images/luovo/luovo_labels.jpg" alt="Label Designs" class="project-img">
+              <img src="images/luovo/luovo_web_layout.jpg" alt="Luovo Home Page" class="project-img">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item">
+        <button class="project-toggle" aria-expanded="false">
+          <div class="project-title">8-Bit Archive</div>
+          <div class="project-category">Web Design</div>
+        </button>
+        <div class="project-dropdown" role="region">
+          <div class="project-dropdown-inner">
+            <div class="project-desc">An archival website made for collecting, sorting, and organizing information on retro home gaming consoles and games. The website also provides information to aid collectors in acquiring these archived items.</div>
+            <div class="project-images">
+              <img src="images/8bit/main_large_8bit.jpg" alt="8-Bit Archive home page" class="project-img">
+              <img src="images/8bit/all_games.png" alt="8-Bit Archive all games" class="project-img">
+              <img src="images/8bit/item_page.png" alt="8-Bit Archive item page" class="project-img">
+              <img src="images/8bit/find_store.png" alt="8-Bit Archive find store" class="project-img">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item">
+        <button class="project-toggle" aria-expanded="false">
+          <div class="project-title">Lilli to Barbie</div>
+          <div class="project-category">Book Design</div>
+        </button>
+        <div class="project-dropdown" role="region">
+          <div class="project-dropdown-inner">
+            <div class="project-desc">A book in the shape of a fashion doll toy box. It details the origin story of the character Lilli and her transformation into the childrens version created by Mattel that we all now know as Barbie.</div>
+            <div class="project-images">
+              <img src="images/lilli/food_icon.png" alt="Sara Duell Design Lecture Animation" class="project-img">
+              <img src="images/lilli/book_layout.jpg" alt="Sara Duell Design Lecture Animation" class="project-img">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item">
+        <button class="project-toggle" aria-expanded="false">
+          <div class="project-title">Cubed Creatures</div>
+          <div class="project-category">Art Kit Design</div>
+        </button>
+        <div class="project-dropdown" role="region">
+          <div class="project-dropdown-inner">
+            <div class="project-desc">A hypothetical product based around a folded paper craft that can be sold in instructional building kits.</div>
+            <div class="project-images">
+              <img src="images/cubed-creatures/s_web1.jpg" alt="Cubed Creatures" class="project-img">
+              <img src="images/cubed-creatures/s_web2.jpg" alt="Cubed Creatures" class="project-img">
+              <img src="images/cubed-creatures/s_web3.jpg" alt="Cubed Creatures" class="project-img">
+              <img src="images/cubed-creatures/s_web4.jpg" alt="Cubed Creatures" class="project-img">
+              <img src="images/cubed-creatures/s_web5.jpg" alt="Cubed Creatures" class="project-img">
+              <img src="images/cubed-creatures/s_web6.jpg" alt="Cubed Creatures" class="project-img">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item">
+        <button class="project-toggle" aria-expanded="false">
+          <div class="project-title">Check Your Blood Sugar</div>
+          <div class="project-category">Game Design</div>
+        </button>
+        <div class="project-dropdown" role="region">
+          <div class="project-dropdown-inner">
+            <div class="project-desc">A card based board game that mimics the repetitive process of checking your blood sugar on a daily loop with type 1 diabetes.</div>
+            <div class="project-images">
+              <img src="images/blood-sugar/bs_cards.jpg" alt="Playing Cards and Box" class="project-img">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item">
+        <button class="project-toggle" aria-expanded="false">
+          <div class="project-title" style="white-space: nowrap;">Pancreas: Manual Mode</div>
+          <div class="project-category">Game Design</div>
+        </button>
+        <div class="project-dropdown" role="region">
+          <div class="project-dropdown-inner">
+            <div class="project-desc">A board game themed around the daily planning habits that someone with type 1 diabetes might deal with. It mimics the action through a card management game system, aiming to reflect the inevitable annoyances and challenges.<br>Play online <a href="https://pancreas-manual-mode.vercel.app/" target="_blank" rel="noopener noreferrer">here</a></div>
+            <div class="project-images">
+              <img src="images/pancreas/pmm_web1.jpg" alt="Pancreas: Manual Mode" class="project-img">
+              <img src="images/pancreas/pmm_web2.jpg" alt="Pancreas: Manual Mode" class="project-img">
+              <img src="images/pancreas/pmm_web3.jpg" alt="Pancreas: Manual Mode" class="project-img">
+              <img src="images/pancreas/pmm_web4.jpg" alt="Pancreas: Manual Mode" class="project-img">
+              <img src="images/pancreas/pmm_web5.jpg" alt="Pancreas: Manual Mode" class="project-img">
+              <img src="images/pancreas/pmm_web6.jpg" alt="Pancreas: Manual Mode" class="project-img">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </nav>
+  </div>
+
+  <script>
+    // ── Name dropdown ──────────────────────────────────
+    var nameToggle   = document.querySelector('.name-toggle');
+    var nameDropdown = document.querySelector('.name-dropdown');
+
+    nameToggle.addEventListener('click', function() {
+      var isOpen = nameDropdown.classList.contains('is-open');
+      nameDropdown.classList.toggle('is-open', !isOpen);
+      nameToggle.classList.toggle('is-open', !isOpen);
+      nameToggle.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    // ── Project dropdowns ──────────────────────────────
+    document.querySelectorAll('.project-toggle').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var item     = btn.closest('.project-item');
+        var dropdown = btn.nextElementSibling;
+        var isOpen   = dropdown.classList.contains('is-open');
+
+        if (!isOpen) {
+          item.classList.add('is-open');
+          btn.classList.add('is-open');
+          btn.setAttribute('aria-expanded', 'true');
+
+          function onSlide(e) {
+            if (e.propertyName !== 'padding-left') return;
+            item.removeEventListener('transitionend', onSlide);
+            dropdown.classList.add('is-open');
+          }
+          item.addEventListener('transitionend', onSlide);
+
+        } else {
+          dropdown.classList.remove('is-open');
+          btn.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+
+          function onCollapse(e) {
+            if (e.propertyName !== 'grid-template-rows') return;
+            dropdown.removeEventListener('transitionend', onCollapse);
+            item.classList.remove('is-open');
+          }
+          dropdown.addEventListener('transitionend', onCollapse);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
